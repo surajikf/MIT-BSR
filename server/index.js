@@ -5,6 +5,7 @@ const http = require('http');
 const socketIo = require('socket.io');
 const dotenv = require('dotenv');
 const path = require('path');
+const cron = require('node-cron');
 
 // Load environment variables
 dotenv.config();
@@ -59,6 +60,18 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     console.log('🔌 Client disconnected:', socket.id);
   });
+
+  // Handle signal requests
+  socket.on('signals:request', async () => {
+    try {
+      // Generate new signals for demo user
+      const demoUserId = 'demo-user-id'; // In production, get from auth
+      const signals = await tradingSignalsService.generateAllSignals(demoUserId);
+      socket.emit('signals:update', { type: 'signals:update', data: signals });
+    } catch (error) {
+      console.error('❌ Error handling signals request:', error);
+    }
+  });
 });
 
 // Initialize services
@@ -67,6 +80,35 @@ const priceUpdateService = new PriceUpdateService(io);
 
 // Start price update service
 priceUpdateService.start();
+
+// Schedule signal updates and market trend checks
+cron.schedule('*/5 * * * *', async () => {
+  try {
+    console.log('🔄 Updating existing signals with market data...');
+    await tradingSignalsService.updateExistingSignals();
+    console.log('✅ Signal updates completed');
+  } catch (error) {
+    console.error('❌ Error updating signals:', error);
+  }
+}, {
+  scheduled: true,
+  timezone: "UTC"
+});
+
+// Schedule new signal generation (every 15 minutes)
+cron.schedule('*/15 * * * *', async () => {
+  try {
+    console.log('🔄 Generating new trading signals...');
+    const demoUserId = 'demo-user-id'; // In production, get from auth
+    await tradingSignalsService.generateAllSignals(demoUserId);
+    console.log('✅ New signals generated');
+  } catch (error) {
+    console.error('❌ Error generating signals:', error);
+  }
+}, {
+  scheduled: true,
+  timezone: "UTC"
+});
 
 // Global error handler
 app.use((err, req, res, next) => {
@@ -80,4 +122,6 @@ server.listen(PORT, () => {
   console.log(`📊 Trading Signals API ready`);
   console.log(`🔗 Frontend: http://localhost:3000`);
   console.log(`🔗 Backend: http://localhost:${PORT}`);
+  console.log(`⏰ Signal updates scheduled every 5 minutes`);
+  console.log(`⏰ New signal generation scheduled every 15 minutes`);
 });

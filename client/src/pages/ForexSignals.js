@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSocket } from '../contexts/SocketContext';
 import { useTheme } from '../contexts/ThemeContext';
 import SignalCard from '../components/Signals/SignalCard';
+import SignalStats from '../components/Signals/SignalStats';
 import { 
   TrendingUp, 
   TrendingDown, 
@@ -315,6 +316,11 @@ const ForexSignals = () => {
               </button>
             ))}
           </div>
+        </div>
+
+        {/* Signal Statistics */}
+        <div className="mb-6">
+          <SignalStats signals={filteredSignals} type="forex" />
         </div>
 
         {/* Signals Grid */}

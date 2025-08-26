@@ -2,6 +2,7 @@
   "name": "trading-signals-client",
   "version": "1.0.0",
   "private": true,
+  "homepage": "https://surajikf.github.io/MIT-BSR",
   "dependencies": {
     "@tailwindcss/forms": "^0.5.10",
     "@testing-library/jest-dom": "^5.16.4",
