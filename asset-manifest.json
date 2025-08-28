@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/MIT-BSR/static/css/main.88d907c6.css",
+    "main.js": "/MIT-BSR/static/js/main.791387c8.js",
+    "index.html": "/MIT-BSR/index.html",
+    "main.88d907c6.css.map": "/MIT-BSR/static/css/main.88d907c6.css.map",
+    "main.791387c8.js.map": "/MIT-BSR/static/js/main.791387c8.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.88d907c6.css",
+    "static/js/main.791387c8.js"
+  ]
+}
